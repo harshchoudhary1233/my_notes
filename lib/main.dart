@@ -5,7 +5,7 @@ import 'package:my_notes/views/login_view.dart';
 
 import 'package:my_notes/views/register_view.dart';
 import 'package:my_notes/views/verify_email_view.dart';
-
+import 'dart:developer' show log;
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -15,7 +15,6 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  //final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -27,8 +26,9 @@ class MyApp extends StatelessWidget {
       ),
       home: const HomePage(),
       routes: {
-        '/login/': (context) => LoginView(),
-        '/register/': (context) => const RegisterView()
+        '/login/': (context) => const LoginView(),
+        '/register/': (context) => const RegisterView(),
+        '/notes/':(context) => const NotesView()
       },
     );
   }
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
             final user = FirebaseAuth.instance.currentUser;
-            print(user);
+            log(user.toString());
             if (user != null) {
               if (user.emailVerified) {
                 return const NotesView();
@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
                 return const VerifyEmailView();
               }
             } else {
-              return LoginView();
+              return const LoginView();
             }
 
           default:

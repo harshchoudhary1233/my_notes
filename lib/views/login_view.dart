@@ -2,9 +2,10 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' show log;
 
 import 'package:my_notes/constants/routes.dart';
+
+import '../utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -71,10 +72,26 @@ class _MyHomePageState extends State<LoginView> {
                 );
               } on FirebaseAuthException catch (e) {
                 if (e.code == "user-not-found") {
-                  log('user not found');
+                  await showErrorDialog(
+                    context,
+                    'User not found',
+                  );
                 } else if (e.code == "wrong-password") {
-                  log('wrong password');
+                  await showErrorDialog(
+                    context,
+                    'Wrong password',
+                  );
+                } else {
+                  await showErrorDialog(
+                    context,
+                    'Error: ${e.code}',
+                  );
                 }
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  e.toString(),
+                );
               }
             },
             child: const Text('Sign in'),
@@ -89,7 +106,7 @@ class _MyHomePageState extends State<LoginView> {
             child: const Text('Not registered yet? Register here'),
           )
         ],
-      ),  
+      ),
     );
   }
 }
